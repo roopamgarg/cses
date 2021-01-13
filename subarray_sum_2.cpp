@@ -1,34 +1,39 @@
-#include<iostream>
+#include <iostream>
+#include <map>
 #define ll long long
 using namespace std;
 
-int main(){
+int main()
+{
   int n, t;
-  cin>>n>>t;
-  int arr[n];
-  for(int i = 0; i < n; i++){
-    cin>>arr[i];
-    if(i > 0){
-      arr[i] += arr[i-1];
-    }
-  }
-  int start = 0;
-  int end = 0;
-  ll sum = arr[0];
-  int count = 0;
-  while(end < n && start < n){
+  cin >> n >> t;
+  ll arr[n];
+  map<ll,int> sums;
+  ll count = 0;
+  for (int i = 0; i < n; i++)
+  {
+    cin >> arr[i];
 
-    if(sum < t){
-      end++;
-      sum = arr[end] - arr[start];
-    }else if(sum > t){
-      sum = arr[end] - arr[start];
-      start++;
-    }else{
-      count++;
-      sum -= arr[start++];
-      sum += arr[++end];
+    if (i > 0)
+    {
+      
+      arr[i] += arr[i - 1];
+      if (sums.count(arr[i] - t) == 1)
+      {
+        //sums[arr[i] - t]++;
+        count += sums[arr[i] - t];
+      }
+      if (arr[i] == t)
+      {
+        count++;
+      }
     }
+    else if (arr[i] == t)
+    {
+      count++;
+    }
+    sums[arr[i]]++;
   }
-  cout<<count;
+
+  cout << count;
 }
