@@ -19,7 +19,7 @@ public:
   }
 
   // copy segment tree
-  SegmentTree(vector<int> nodes, int size)
+  SegmentTree(vector<int>& nodes, int size)
   {
     this->nodes = nodes;
     this->arr = vector<int>(size);
@@ -106,7 +106,7 @@ public:
   {
     return nodes;
   }
-  SegmentTree operator+(SegmentTree tree)
+  SegmentTree operator+(SegmentTree& tree)
   {
     vector<int> newTree = vector<int>(size());
     vector<int> secondTree = tree.getCopy();
@@ -127,7 +127,7 @@ class SegmentTree2D
   vector<vector<int>> matrix;
 
 public:
-  SegmentTree2D(vector<vector<int>> matrix)
+  SegmentTree2D(vector<vector<int>>& matrix)
   {
     nodes = vector<SegmentTree>(matrix.size() * 4);
     this->matrix = matrix;
@@ -152,22 +152,22 @@ private:
   }
 
 public:
-  void update(int row_start, int row_end, int target_row, int target_col, int value, int index = 0)
+  void update(int row_start, int row_end, int target_row, int target_col, int index = 0)
   {
     if (row_start == row_end)
     {
-      nodes[index].update(0, matrix[target_row].size() - 1, target_col, value);
-      matrix[target_row][target_col] = value;
+      nodes[index].update(0, matrix[target_row].size() - 1, target_col, !matrix[target_row][target_col]);
+    //  matrix[target_row][target_col] = !matrix[target_row][target_col];
       return;
     }
     int mid = (row_start + row_end) / 2;
     if (target_row > mid)
     {
-      update(mid + 1, row_end, target_row, target_col, value, index * 2 + 2);
+      update(mid + 1, row_end, target_row, target_col, index * 2 + 2);
     }
     else
     {
-      update(row_start, mid, target_row, target_col, value, index * 2 + 1);
+      update(row_start, mid, target_row, target_col, index * 2 + 1);
     }
     nodes[index] = nodes[index * 2 + 1] + nodes[index * 2 + 2];
   }
@@ -208,9 +208,18 @@ int32_t main()
   }
   SegmentTree2D tree(matrix);
   while(q--){
+    int type;
+    cin>>type;
+    if(type == 2){
+
     int row_start,col_start,row_end,col_end;
     cin>>row_start>>col_start>>row_end>>col_end;
     cout<<tree.find(row_start-1,row_end-1,col_start-1,col_end-1,0,n-1)<<endl;
+    }else{
+        int row,col;
+        cin>>row>>col;
+        tree.update(0,n-1,row-1,col-1);
+    }
   }
   return 0;
 }
