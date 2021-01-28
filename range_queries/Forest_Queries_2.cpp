@@ -106,6 +106,11 @@ public:
   {
     return nodes;
   }
+  int getVal(int index){
+    if(index < arr.size())
+      return arr[index];
+    return -1;
+  }
   SegmentTree operator+(SegmentTree& tree)
   {
     vector<int> newTree = vector<int>(size());
@@ -154,10 +159,11 @@ private:
 public:
   void update(int row_start, int row_end, int target_row, int target_col, int index = 0)
   {
+    int curr = matrix[target_row][target_col];
     if (row_start == row_end)
     {
-      nodes[index].update(0, matrix[target_row].size() - 1, target_col, !matrix[target_row][target_col]);
-    //  matrix[target_row][target_col] = !matrix[target_row][target_col];
+      nodes[index].update(0, matrix[target_row].size() - 1, target_col, !curr);
+      matrix[target_row][target_col] = !curr;
       return;
     }
     int mid = (row_start + row_end) / 2;
@@ -169,7 +175,11 @@ public:
     {
       update(row_start, mid, target_row, target_col, index * 2 + 1);
     }
-    nodes[index] = nodes[index * 2 + 1] + nodes[index * 2 + 2];
+    if(curr == 1){
+      nodes[index].update(0,matrix.size() - 1,target_col, nodes[index].getVal(target_col) - 1);
+    }else{
+      nodes[index].update(0,matrix.size() - 1,target_col, nodes[index].getVal(target_col) + 1);
+    }
   }
 
   int find(int row_range_start, int row_range_end, int col_range_start, int col_range_end, int row_start, int row_end, int index = 0)
