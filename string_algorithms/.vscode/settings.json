@@ -1,0 +1,13 @@
+{
+  "cSpell.words": [
+    "Trei"
+  ],
+  "files.associations": {
+    "*.tcc": "cpp",
+    "bitset": "cpp",
+    "forward_list": "cpp",
+    "list": "cpp",
+    "future": "cpp",
+    "string_view": "cpp"
+  }
+}
