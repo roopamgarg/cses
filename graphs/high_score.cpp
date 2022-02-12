@@ -11,7 +11,20 @@ struct CompareWeights
   }
 };
 
-int findShortestRoute(vector<vector<pair<int, int>>> &graph, vector<vector<int>> &edges, int n)
+bool isCyclic(int root, vector<vector<pair<int, int>>> &graph, vector<bool> &visited)
+{
+  if (visited[root])
+    return true;
+  visited[root] = true;
+  for (pair<int, int> nb : graph[root])
+  {
+    if (isCyclic(nb.first, graph, visited))
+      return true;
+  }
+  return false;
+}
+
+int findShortestRoute(vector<vector<int>> &edges, int n)
 {
   vector<int> visited(n + 1, INT_MIN);
   visited[1] = 0;
@@ -25,7 +38,6 @@ int findShortestRoute(vector<vector<pair<int, int>>> &graph, vector<vector<int>>
       }
     }
   }
-  if(visited[1] != 0) return -1;
   return visited[n];
 }
 
@@ -43,8 +55,16 @@ int32_t main()
     edges.push_back({a, b, c});
     // graph[b].push_back({a,c});
   }
+  vector<bool> v(n + 1, false);
+  if (!isCyclic(1, graph, v) && v[n] == true)
+  {
 
-  int res = findShortestRoute(graph, edges, n);
-  cout << res;
+    int res = findShortestRoute(edges, n);
+    cout << res;
+  }
+  else
+  {
+    cout << -1;
+  }
   return 0;
 }
